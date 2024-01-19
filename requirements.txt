@@ -1,0 +1,4 @@
+black
+requests
+polars
+matplotlib
