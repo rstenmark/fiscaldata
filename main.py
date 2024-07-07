@@ -116,11 +116,11 @@ class API:
                 data = con.execute(
                     "SELECT data FROM cache WHERE expires >= ? AND term == ? LIMIT 1",
                     (datetime.datetime.now(tz=API.Cache.timezone), term),
-                ).fetchone()[0]
+                ).fetchone()
 
             # If any data was returned by the query, it has to be un-pickled before it can be returned to the caller:
             if data is not None:
-                return pickle.loads(data)
+                return pickle.loads(data[0])
             else:
                 # No data was found in the cache, return None.
                 return None
@@ -190,7 +190,6 @@ class API:
 
             # For each row containing a dictionary in the data provided by the API,
             for response_row_dict in response.json()["data"]:
-
                 # The row-wise transformed data will be copied into a list.
                 row_transform: list[str | float] = []
 
@@ -203,18 +202,28 @@ class API:
                         # Append this value to the transformed row.
                         row_transform.append(response_row_dict[column_name])
 
-                    # This value should be a float. It could also be a string equivalent to "null".
+                    # This value should be a string representing a float.
+                    # It could also be a string equivalent to "null".
                     elif value_type == float:
+                        # Make sure the value is a string.
+                        assert isinstance(response_row_dict[column_name], str)
                         if response_row_dict[column_name] == "null":
                             # If this value is a string "null", assign an empty list to row_transform to indicate
                             # that this row should be discarded from the transform.
                             row_transform = []
                             break
                         else:
-                            # Make sure the value contained actually a float.
-                            assert isinstance(response_row_dict[column_name], float)
+                            try:
+                                # Try to interpret the string as a float.
+                                value = float(response_row_dict[column_name])
+                            except ValueError as exc:
+                                exc.add_note(
+                                    f"The string {response_row_dict[column_name]} in column {column_name}"
+                                    f"cannot be interpreted as a float value."
+                                )
+                                raise exc
                             # Append this value to the transformed row.
-                            row_transform.append(float(response_row_dict[column_name]))
+                            row_transform.append(value)
 
                 # Append this non-zero length transformed row to the list of transformed rows.
                 if not len(row_transform) == 0:
