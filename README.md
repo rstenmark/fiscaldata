@@ -1,7 +1,5 @@
 # fiscaldata
 
----
-
 ### Purpose:
 
 [main.py](https://github.com/rstenmark/fiscaldata/blob/master/main.py) creates a time series step chart (see Figure 1) that visualizes US Federal Treasury Bill discounted rates over time. 
