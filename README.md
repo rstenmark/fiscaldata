@@ -63,7 +63,7 @@ To refresh the cache, these five `polars.DataFrame` objects are then pickled and
 
 If a cache hit *did* occur, however, then five `DataFrame`-containing pickles are simply read from the cache and unpickled.
 
-Step three, graphing the data, is made quite simple by the use of `polars.DataFrame` objects to store the data. A figure containing one subplot is created, the title and axes labels are specified, and five stepped lines are drawn on the single subplot using the `issue_date` and `price_per100` columns, for the x and y-axis respectively. Solid grid lines are enabled for both axes. Dotted, slightly transparent, minor grid lines are enabled on the y-axis only. The legend is enabled. 
+Step three, charting the data, is made quite simple by the use of `polars.DataFrame` objects to store the data. A figure containing one subplot is created, the title and axes labels are specified, and five stepped lines are drawn on the single subplot using the `issue_date` and `price_per100` columns, for the x and y-axis respectively. Solid grid lines are enabled for both axes. Dotted, slightly transparent, minor grid lines are enabled on the y-axis only. The legend is enabled. 
 
 Finally, the chart is drawn, and execution of the script is blocked until the user closes the window containing the chart. The script exits upon closure of the chart window.
 
